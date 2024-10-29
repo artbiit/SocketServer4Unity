@@ -1,9 +1,11 @@
 // 서버 초기화 작업
+import { loadHandlers } from '../handlers/index.js';
 import { loadProtos } from './loadProtos.js';
 
 const initServer = async () => {
   try {
     await loadProtos();
+    await loadHandlers();
     // 다음 작업
   } catch (e) {
     console.error(e);
