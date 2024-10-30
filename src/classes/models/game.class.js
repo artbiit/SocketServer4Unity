@@ -67,7 +67,7 @@ class Game {
       const { x, y } = user.calculatePosition(maxLatency);
       return { id: user.id, x, y };
     });
-    return createLocationPacket(locationData);
+    return locationData;
   }
 }
 

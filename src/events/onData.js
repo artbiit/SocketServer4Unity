@@ -30,11 +30,10 @@ export const onData = (socket) => async (data) => {
       socket.buffer = socket.buffer.slice(length);
 
       try {
-        const { payload, userId } = packetParser(packet);
+        const payload = packetParser(packet);
         const handler = getHandlerById(handlerId);
         const result = await handler({
           socket,
-          userId,
           payload,
         });
 

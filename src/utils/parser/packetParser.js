@@ -11,9 +11,9 @@ export const packetParser = (handlerId, data) => {
   const { namespace, typeName } = getProtoTypeNameByHandlerId(handlerId);
 
   const Packet = protoMessages[namespace][typeName];
-  let packet = null;
+  let payload = null;
   try {
-    packet = Packet.decode(data);
+    payload = Packet.decode(data);
   } catch (error) {
     throw new CustomError(
       ErrorCodes.PACKET_DECODE_ERROR,
@@ -24,14 +24,13 @@ export const packetParser = (handlerId, data) => {
   const user = getUserById(userId);
   // 유저가 접속해 있는 상황에서 시퀀스 검증
   // 패킷에도 sequence가 정의 되어있어야 검사.
-  if (packet.sequence && user && user.sequence !== packet.sequence) {
+  if (payload.sequence && user && user.sequence !== payload.sequence) {
     throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 호출 값입니다. ');
   }
 
-  const userId = packet.userId;
   // 필드가 비어 있거나, 필수 필드가 누락된 경우 처리
   const expectedFields = Object.keys(Packet.fields);
-  const actualFields = Object.keys(packet);
+  const actualFields = Object.keys(payload);
   const missingFields = expectedFields.filter((field) => !actualFields.includes(field));
   if (missingFields.length > 0) {
     throw new CustomError(
@@ -39,5 +38,5 @@ export const packetParser = (handlerId, data) => {
       `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
     );
   }
-  return { userId, packet };
+  return payload;
 };

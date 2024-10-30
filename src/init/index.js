@@ -20,8 +20,8 @@ const initServer = async () => {
 
 export default initServer;
 
-await initServer();
+// await initServer();
 
-console.log(handlers);
-console.log(handlerIds);
-process.exit(1);
+// console.log(handlers);
+// console.log(handlerIds);
+// process.exit(1);

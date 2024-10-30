@@ -7,7 +7,7 @@ import configs from '../../configs/configs.js';
 
 const { CLIENT_VERSIONS } = configs;
 
-const initialHandler = async ({ socket, userId, payload }) => {
+const initialHandler = async ({ socket, payload }) => {
   const result = new Result(handlerIds.initial.InitialPacket, RESPONSE_SUCCESS_CODE, {});
 
   try {
