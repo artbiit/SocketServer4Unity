@@ -6,10 +6,15 @@ package common;
 message Packet {
   string userId = 1;         // 유저 ID (UUID, 16바이트)
   uint32 sequence = 2;       // 유저의 호출 수 (42억)
+  bytes payload = 3;         // 실제 데이터
 }
 
 // Ping 메시지
 message Ping {
-  Packet packet = 1;
-  int64 timestamp = 2;       // Ping 타임스탬프
+  int64 timestamp = 1;       // Ping 타임스탬프
+}
+
+
+message Test {
+  string sibal = 1;
 }
