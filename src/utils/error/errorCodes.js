@@ -11,3 +11,7 @@ export const ErrorCodes = {
   GAME_NOT_FOUND: 10009,
   // 추가적인 에러 코드들
 };
+
+export const ErrorNames = Object.fromEntries(
+  Object.entries(ErrorCodes).map(([key, value]) => [value, key]),
+);
