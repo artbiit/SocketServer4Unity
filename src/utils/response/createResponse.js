@@ -1,8 +1,8 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { getNextSequence } from '../../session/user.session.js';
-import { config } from '../../config/config.js';
-import { PACKET_TYPE } from '../../constants/header.js';
+import configs from '../../configs/configs.js';
 
+const { PACKET_TYPE_LENGTH, PACKET_TOTAL_LENGTH } = configs;
 export const createResponse = (handlerId, responseCode, data = null, userId) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages.response.Response;
@@ -17,13 +17,9 @@ export const createResponse = (handlerId, responseCode, data = null, userId) => 
 
   const buffer = Response.encode(responsePayload).finish();
   // 패킷 길이 정보를 포함한 버퍼 생성
-  const packetLength = Buffer.alloc(config.packet.totalLength);
-  packetLength.writeUInt32BE(buffer.length + config.packet.typeLength, 0); // 패킷 길이에 타입 바이트 포함
-
-  // 패킷 타입 정보를 포함한 버퍼 생성
-  const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(PACKET_TYPE.NORMAL, 0);
+  const packetLength = Buffer.alloc(PACKET_TOTAL_LENGTH);
+  packetLength.writeUInt32BE(buffer.length + PACKET_TYPE_LENGTH, 0); // 패킷 길이에 타입 바이트 포함
 
   // 길이 정보와 메시지를 함께 전송
-  return Buffer.concat([packetLength, packetType, buffer]);
+  return Buffer.concat([packetLength, buffer]);
 };

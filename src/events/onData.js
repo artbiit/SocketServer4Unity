@@ -1,12 +1,6 @@
-import { config } from '../config/config.js';
-import { PACKET_TYPE } from '../constants/header.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { getHandlerById } from '../handlers/index.js';
-import { getUserById, getUserBySocket } from '../session/user.session.js';
 import { handleError } from '../utils/error/errorHandler.js';
-import CustomError from '../utils/error/customError.js';
-import { ErrorCodes } from '../utils/error/errorCodes.js';
-import { getProtoMessages } from '../init/loadProtos.js';
 import { createResponse } from '../utils/response/createResponse.js';
 
 export const onData = (socket) => async (data) => {

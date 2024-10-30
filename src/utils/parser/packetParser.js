@@ -1,6 +1,5 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
-import { config } from '../../config/config.js';
 import CustomError from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
 
