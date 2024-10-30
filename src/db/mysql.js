@@ -114,6 +114,6 @@ class MysqlService {
   }
 }
 
-const mysql = new MysqlService();
+const mysqlService = new MysqlService();
 
-export { mysql };
+export { mysqlService as mysql };
