@@ -11,29 +11,43 @@ export const RESPONSE_SUCCESS_CODE = 0;
 export const loadHandlers = async () => {
   const packetNames = getPacketNames();
 
-  let handlerId = 0;
-  for (const [namespace, types] of Object.entries(packetNames)) {
-    for (const typeName of Object.keys(types)) {
-      try {
-        if (handlerId < 0 || handlerId > 255) {
-          throw new Error(`핸들러 아이디가 허용범위를 벗어났습니다. : ${handlerId}`);
-        }
-
-        handlers[handlerId] = {};
-        const handlerPath = `./${namespace}/${typeName}.js`;
-        const handler = await import(handlerPath);
-        handlerIds[`${namespace}.${typeName}`] = handlerId;
-        handlers[handlerId].handler = handler.default || handler;
-        handlers[handlerId].namespace = namespace;
-        handlers[handlerId++].typeName = typeName;
-
-        logger.info(`Loaded Handler: ${handlerPath}`);
-      } catch (error) {
-        logger.error(
-          `Handler 로드 중 오류가 발생했습니다: [${handlerId}]${namespace}.${typeName}`,
-          error,
-        );
+  // 패키지명, 메시지명에 따라 정렬
+  const sortedPacketEntries = Object.entries(packetNames)
+    .flatMap(([namespace, types]) => {
+      return Object.entries(types).map(([typeName, fullName]) => ({
+        namespace,
+        typeName,
+        fullName,
+      }));
+    })
+    .sort((a, b) => {
+      if (a.namespace === b.namespace) {
+        return a.typeName.localeCompare(b.typeName);
       }
+      return a.namespace.localeCompare(b.namespace);
+    });
+
+  let handlerId = 0;
+  for (const { namespace, typeName, fullName } of sortedPacketEntries) {
+    try {
+      if (handlerId < 0 || handlerId > 255) {
+        throw new Error(`핸들러 아이디가 허용범위를 벗어났습니다. : ${handlerId}`);
+      }
+
+      handlers[handlerId] = {};
+      const handlerPath = `./${namespace}/${typeName}.js`;
+      const handler = await import(handlerPath);
+      handlerIds[fullName] = handlerId;
+      handlers[handlerId].handler = handler.default || handler;
+      handlers[handlerId].namespace = namespace;
+      handlers[handlerId++].typeName = typeName;
+
+      logger.info(`Loaded Handler: ${handlerPath}`);
+    } catch (error) {
+      logger.error(
+        `Handler 로드 중 오류가 발생했습니다: [${handlerId}]${namespace}.${typeName}`,
+        error,
+      );
     }
   }
   return handlers;

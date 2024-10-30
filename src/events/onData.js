@@ -5,9 +5,8 @@ import { createResponse } from '../utils/response/createResponse.js';
 import configs from '../configs/configs.js';
 import { getUserBySocket } from '../session/user.session.js';
 
-const { PACKET_HEADER_LENGTH, PACKET_TYPE_LENGTH } = configs;
+const { PACKET_HEADER_LENGTH, PACKET_TYPE_LENGTH, PACKET_TOTAL_LENGTH } = configs;
 
-const PACKET_TOTAL_LENGTH = PACKET_HEADER_LENGTH + PACKET_TYPE_LENGTH;
 export const onData = (socket) => async (data) => {
   // 기존 버퍼에 새로 수신된 데이터를 추가
   socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -24,22 +23,24 @@ export const onData = (socket) => async (data) => {
       // 패킷 데이터를 자르고 버퍼에서 제거
       const packet = socket.buffer.slice(PACKET_TOTAL_LENGTH, requiredLength);
       socket.buffer = socket.buffer.slice(requiredLength);
-      const user = getUserBySocket(socket);
-
+      let result = null;
+      let user = getUserBySocket(socket);
       try {
-        const { payload, sequence, userIdByPacket } = packetParser(handlerId, user, packet);
+        const payload = packetParser(handlerId, user, packet);
         const handler = getHandlerById(handlerId);
 
-        const result = await handler({
+        result = await handler({
           socket,
           payload,
         });
-
-        const response = createResponse(handlerId, result.responseCode, result.payload, user?.id);
-
-        socket.write(response);
       } catch (error) {
-        handleError(socket, error);
+        result = handleError(handlerId, error);
+      } finally {
+        if (result) {
+          user = user || getUserBySocket(socket);
+          const response = createResponse(handlerId, result.responseCode, result.payload, user?.id);
+          socket.write(response);
+        }
       }
     } else {
       // 아직 전체 패킷이 도착하지 않음

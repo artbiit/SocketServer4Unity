@@ -6,7 +6,7 @@ class User {
     this.socket = socket;
     this.x = 0;
     this.y = 0;
-    this.sequence = 0;
+    this.sequence = Math.floor(Math.random() * 2_100_000_001);
     this.lastUpdateTime = Date.now();
   }
 
@@ -17,7 +17,10 @@ class User {
   }
 
   getNextSequence() {
-    return ++this.sequence;
+    if (++this.sequence > 4294967295) {
+      this.sequence = 1;
+    }
+    return this.sequence;
   }
 
   ping() {
@@ -27,9 +30,9 @@ class User {
     this.socket.write(createPingPacket(now));
   }
 
-  handlePong(data) {
+  handlePong(timestamp) {
     const now = Date.now();
-    this.latency = (now - data.timestamp) / 2;
+    this.latency = (now - timestamp) / 2;
     console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
   }
 

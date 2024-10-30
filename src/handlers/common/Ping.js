@@ -1,11 +1,16 @@
+import { getUserBySocket } from '../../session/user.session.js';
+import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { RESPONSE_SUCCESS_CODE } from '../index.js';
-import Result from '../result.js';
 
 const pingHandler = ({ socket, payload }) => {
-  return new Result(RESPONSE_SUCCESS_CODE, {
-    message: 'Pong.',
-  });
+  const user = getUserBySocket(socket);
+
+  if (!user) {
+    throw new CustomError(ErrorCodes.USER_NOT_FOUND);
+  }
+
+  const { timestamp } = payload;
+  user.handlePong(timestamp);
 };
 
 export default pingHandler;

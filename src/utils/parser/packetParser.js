@@ -17,7 +17,7 @@ export const packetParser = (handlerId, user, data) => {
     logger.error(error);
     throw new CustomError(
       ErrorCodes.PACKET_DECODE_ERROR,
-      `패킷 디코딩 중 문제 발생 : ${namespace}.${typeName}`,
+      `패킷 디코딩 중 문제 발생 : common.Packet`,
     );
   }
 
@@ -36,6 +36,8 @@ export const packetParser = (handlerId, user, data) => {
   let payload;
   try {
     payload = PayloadType.decode(packet.payload);
+    payload.sequence = sequence;
+    payload.userIdByPacket = userIdByPacket;
   } catch (error) {
     logger.error(error);
     throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, '패킷 구조가 일치하지 않습니다.');
@@ -51,5 +53,6 @@ export const packetParser = (handlerId, user, data) => {
       `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
     );
   }
-  return { payload, sequence, userIdByPacket };
+
+  return payload;
 };
