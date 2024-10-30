@@ -1,6 +1,6 @@
 // 서버 초기화 작업
-import { loadHandlers } from '../handlers/index.js';
-import { loadProtos } from './loadProtos.js';
+import { handlerIds, handlers, loadHandlers } from '../handlers/index.js';
+import { getProtoMessages, loadProtos } from './loadProtos.js';
 import { mysql } from '../db/mysql.js';
 import logger from '../utils/logger.js';
 import { connect } from '../db/redis.js';
@@ -19,3 +19,9 @@ const initServer = async () => {
 };
 
 export default initServer;
+
+await initServer();
+
+console.log(handlers);
+console.log(handlerIds);
+process.exit(1);

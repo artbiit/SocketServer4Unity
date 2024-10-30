@@ -19,11 +19,6 @@ const connect = async () => {
         password: REDIS_PASSWORD,
       });
 
-      // Redis 연결 성공 이벤트 핸들러
-      redis.on('connect', () => {
-        logger.info('Redis connection success');
-      });
-
       // Redis 연결 실패 이벤트 핸들러
       redis.on('error', (err) => {
         logger.error(`Redis connection failed: ${err}`);

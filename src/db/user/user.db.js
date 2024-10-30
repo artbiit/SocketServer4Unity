@@ -17,3 +17,11 @@ export const createUser = async (deviceId) => {
 export const updateUserLogin = async (id) => {
   await mysql.query(SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
 };
+
+export const upsertUser = async (id, deviceId) => {
+  if (!id) {
+    id = uuidv4();
+  }
+  await mysql.query(SQL_QUERIES.UPSERT_USER, [id, deviceId]);
+  return await findUserByDeviceID(deviceId);
+};

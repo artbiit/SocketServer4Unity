@@ -1,8 +1,11 @@
 syntax = "proto3";
 
+import "common.proto";
+
 package initial;
 
 // 최초 패킷 구조
 message InitialPacket {
   string deviceId = 1;
+  string clientVersion = 2;  // 클라이언트 버전 (문자열)
 }

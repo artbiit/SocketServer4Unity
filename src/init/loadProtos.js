@@ -38,9 +38,18 @@ export const loadProtos = async () => {
 
     const root = new protobuf.Root();
 
-    // 비동기 병렬 처리로 프로토 파일 로드
-    await Promise.all(protoFiles.map((file) => root.load(file)));
+    // 공통 proto 파일을 먼저 로드합니다.
+    const commonFile = protoFiles.find((file) => file.includes('common.proto'));
+    if (commonFile) {
+      await root.load(commonFile);
+    }
 
+    // 나머지 proto 파일들을 로드합니다.
+    await Promise.all(
+      protoFiles.filter((file) => !file.includes('common.proto')).map((file) => root.load(file)),
+    );
+
+    root.resolveAll();
     // 각 파일의 패키지 및 메시지 이름을 기반으로 protoMessages 객체 구성
     protoFiles.forEach((file) => {
       const loadedRoot = root.resolveAll();
