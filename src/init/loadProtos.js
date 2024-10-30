@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import protobuf from 'protobufjs';
+import logger from '../utils/logger.js';
 
 // 현재 파일의 절대 경로 추출
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +25,6 @@ const getAllProtoFiles = (dir, fileList = []) => {
   return fileList;
 };
 
-// 모든 proto 파일 경로를 가져옴
-const protoFiles = getAllProtoFiles(protoDir);
-
 // 로드된 프로토 메시지들을 저장할 객체
 const protoMessages = {};
 // 패키지와 메시지 이름을 저장할 객체
@@ -35,6 +33,9 @@ const packetNames = {};
 // 모든 .proto 파일을 로드하여 프로토 메시지를 초기화합니다.
 export const loadProtos = async () => {
   try {
+    // 모든 proto 파일 경로를 가져옴
+    const protoFiles = getAllProtoFiles(protoDir);
+
     const root = new protobuf.Root();
 
     // 비동기 병렬 처리로 프로토 파일 로드
@@ -60,9 +61,9 @@ export const loadProtos = async () => {
       });
     });
 
-    console.log('Protobuf 파일이 로드되었습니다.');
+    logger.info('Protobuf 파일이 로드되었습니다.');
   } catch (error) {
-    console.error('Protobuf 파일 로드 중 오류가 발생했습니다:', error);
+    logger.error('Protobuf 파일 로드 중 오류가 발생했습니다:', error);
   }
 };
 
