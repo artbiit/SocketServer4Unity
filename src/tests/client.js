@@ -157,11 +157,8 @@ class Client {
     const protoMessages = getProtoMessages();
     const Response = protoMessages.response.Response;
 
-    // 패킷의 길이와 타입을 제외한 실제 메시지 추출
-    const responseBuffer = buffer.subarray(PACKET_HEADER_LENGTH); // 길이와 타입을 제외한 부분 추출
-
     // Response 메시지 해독
-    const decodedResponse = Response.decode(responseBuffer);
+    const decodedResponse = Response.decode(buffer);
 
     // 해독한 Response 객체를 JSON으로 변환
     return {

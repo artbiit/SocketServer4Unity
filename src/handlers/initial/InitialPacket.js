@@ -5,6 +5,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Result from '../result.js';
 import configs from '../../configs/configs.js';
 import { v4 as uuidv4 } from 'uuid';
+import CustomError from '../../utils/error/customError.js';
 
 const { CLIENT_VERSIONS } = configs;
 
@@ -20,7 +21,7 @@ const initialHandler = async ({ socket, payload }) => {
       addUser(socket, userId);
       result.payload = { userId };
     } else {
-      result.responseCode = ErrorCodes.CLIENT_VERSION_MISMATCH;
+      throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH);
     }
   } catch (e) {
     throw e;
