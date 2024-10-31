@@ -3,7 +3,7 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { createResponse } from '../response/createResponse.js';
 
 export const createLocationPacket = (users, userId) => {
-  return createResponse(handlerIds['gameNotification.LocationUpdate'], 0, { users }, null);
+  return createResponse(handlerIds['gameNotification.LocationUpdate'], 0, { users }, userId);
 };
 
 export const gameStartNotification = (gameId, timestamp) => {
