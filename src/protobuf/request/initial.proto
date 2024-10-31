@@ -8,4 +8,5 @@ package initial;
 message InitialPacket {
   string deviceId = 1;
   string clientVersion = 2;  // 클라이언트 버전 (문자열)
+  uint32 playerId = 3; //클라이언트에서 선택된 캐릭터
 }

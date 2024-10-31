@@ -13,6 +13,7 @@ await client.connect();
 const initialPayload = {
   deviceId: 'xxxxx',
   clientVersion: '1.0.1',
+  playerId: Math.floor(Math.random() * 5),
 };
 
 client.sendMessage(initialPayload, 'initial.InitialPacket');

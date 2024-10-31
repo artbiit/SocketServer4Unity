@@ -1,6 +1,7 @@
-import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import logger from '../utils/logger.js';
+
+export const userSessions = [];
 
 export const addUser = (socket, uuid) => {
   logger.info(`addUser : ${uuid} `);
