@@ -35,14 +35,12 @@ export const loadHandlers = async () => {
         throw new Error(`핸들러 아이디가 허용범위를 벗어났습니다. : ${handlerId}`);
       }
 
-      handlers[handlerId] = {};
-      const handlerPath = `./${namespace}/${typeName}.js`;
-      const handler = await import(handlerPath);
-      handlerIds[fullName] = handlerId;
-      handlers[handlerId].handler = handler.default || handler;
-      handlers[handlerId].namespace = namespace;
-      handlers[handlerId].typeName = typeName;
+      handlers[handlerId] = { namespace, typeName };
 
+      const handlerPath = `./${namespace}/${typeName}.js`;
+      handlerIds[fullName] = handlerId;
+      const handler = await import(handlerPath);
+      handlers[handlerId].handler = handler.default || handler;
       logger.info(`Loaded Handler: ${handlerPath}`);
     } catch (error) {
       logger.error(
