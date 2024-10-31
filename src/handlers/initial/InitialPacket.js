@@ -24,9 +24,14 @@ const initialHandler = async ({ socket, payload }) => {
     if (CLIENT_VERSIONS.includes(clientVersion)) {
       const userId = uuidv4();
       const user = await upsertUser(userId, deviceId);
-      await findUserCoordinates(user.seqNo);
       addUser(socket, userId, playerId);
-      result.payload = { userId };
+      const lastCoord = await findUserCoordinates(user.seqNo);
+      let lastLocation = { x: 0.0, y: 0.0 };
+      if (lastCoord) {
+        (lastLocation.x = lastCoord.x_coord), (lastLocation.y = lastCoord.y_coord);
+      }
+
+      result.payload = { userId, lastLocation };
     } else {
       throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH);
     }
