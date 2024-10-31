@@ -9,6 +9,7 @@ export const ErrorCodes = {
   INVALID_PACKET: 10007,
   INVALID_SEQUENCE: 10008,
   GAME_NOT_FOUND: 10009,
+  ALREADY_INIT_USER: 10010,
   // 추가적인 에러 코드들
 };
 

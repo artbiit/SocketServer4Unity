@@ -5,19 +5,11 @@ import { toCamelCase } from '../utils.js';
 
 export const findUserByDeviceID = async (deviceId) => {
   const [rows] = await mysql.query(SQL_QUERIES.FIND_USER_BY_DEVICE_ID, [deviceId]);
-  return toCamelCase(rows[0]);
-};
-
-export const createUser = async (deviceId) => {
-  const id = uuidv4();
-  await mysql.query(SQL_QUERIES.CREATE_USER, [id, deviceId]);
-  return { id, deviceId };
-};
-
-export const updateUserLogin = async (id) => {
-  await mysql.query(SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
+  return rows.length ? toCamelCase(rows[0]) : null;
 };
 
 export const upsertUser = async (id, deviceId) => {
-  return await mysql.query(SQL_QUERIES.UPSERT_USER, [id, deviceId]);
+  const [result] = await mysql.query(SQL_QUERIES.UPSERT_USER, [id, deviceId]);
+  const user = await findUserByDeviceID(deviceId);
+  return { id, deviceId, seqNo: user.seqNo };
 };

@@ -3,9 +3,9 @@ import logger from '../utils/logger.js';
 
 export const userSessions = [];
 
-export const addUser = (socket, uuid) => {
+export const addUser = (socket, uuid, playerId, deviceId) => {
   logger.info(`addUser : ${uuid} `);
-  const user = new User(uuid, socket);
+  const user = new User(uuid, socket, playerId, deviceId);
   userSessions.push(user);
   return user;
 };
@@ -21,6 +21,10 @@ export const getUserById = (id) => {
   return userSessions.find((user) => {
     return user.id === id;
   });
+};
+
+export const getUserByDeviceId = (deviceId) => {
+  return userSessions.find((user) => user.deviceId === deviceId);
 };
 
 export const getNextSequence = (id) => {
