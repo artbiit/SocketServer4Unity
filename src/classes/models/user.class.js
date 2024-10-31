@@ -6,7 +6,7 @@ class User {
     this.socket = socket;
     this.x = 0;
     this.y = 0;
-    this.sequence = Math.floor(Math.random() * 2_100_000_001);
+    this.sequence = Math.floor(Math.random() * 2_100_000_000) + 1;
     this.lastUpdateTime = Date.now();
     this.playerId = playerId;
     this.deviceId = deviceId;
