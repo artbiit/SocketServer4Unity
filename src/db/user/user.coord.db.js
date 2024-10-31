@@ -1,5 +1,5 @@
 import { mysql } from '../mysql.js';
-import { COORD_QUERIES } from './user.coord.queries.js';
+import { COORD_QUERIES } from './user.coord.queris.js';
 import { toCamelCase } from '../utils.js';
 
 export const findUserCoordinates = async (userSeqNo) => {
