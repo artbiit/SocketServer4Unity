@@ -1,5 +1,6 @@
 import User from '../classes/models/user.class.js';
 import logger from '../utils/logger.js';
+import game from '../classes/models/game.class.js';
 
 export const userSessions = [];
 
@@ -7,12 +8,15 @@ export const addUser = (socket, uuid, playerId, deviceId) => {
   logger.info(`addUser : ${uuid} `);
   const user = new User(uuid, socket, playerId, deviceId);
   userSessions.push(user);
+  game.addUser(user);
   return user;
 };
 
 export const removeUser = (socket) => {
   const index = userSessions.findIndex((user) => user.socket === socket);
+
   if (index !== -1) {
+    game.removeUser(userSessions[index].id);
     return userSessions.splice(index, 1)[0];
   }
 };

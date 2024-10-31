@@ -1,6 +1,6 @@
 import net from 'net';
 import { loadProtos, getProtoMessages } from '../init/loadProtos.js';
-import { handlerIds, loadHandlers } from '../handlers/index.js';
+import { getProtoTypeNameByHandlerId, handlerIds, loadHandlers } from '../handlers/index.js';
 import configs from '../configs/configs.js';
 
 await loadProtos();
@@ -93,26 +93,34 @@ class Client {
         while (this.buffer.length >= PACKET_HEADER_LENGTH) {
           const length = this.buffer.readUintBE(0, PACKET_HEADER_LENGTH);
 
-          console.log(
-            `패킷 길이 (헤더 제외): ${length} (${PACKET_HEADER_LENGTH}) = ${length - PACKET_HEADER_LENGTH}`,
-          );
-          console.log(`현재 버퍼 길이: ${this.buffer.length}`);
+          // console.log(
+          //   `패킷 길이 (헤더 제외): ${length} (${PACKET_HEADER_LENGTH}) = ${length - PACKET_HEADER_LENGTH}`,
+          // );
+          //    console.log(`현재 버퍼 길이: ${this.buffer.length}`);
           if (this.buffer.length >= length) {
             const packet = this.buffer.subarray(PACKET_HEADER_LENGTH, length);
-            console.log(`실제 데이터 패킷 길이: ${packet.length}`);
+            // console.log(`실제 데이터 패킷 길이: ${packet.length}`);
             this.buffer = this.buffer.subarray(length);
 
             try {
               const result = this.decodeResponse(packet);
-              this.sequence = result.sequence;
+              if (result.sequence > 0) {
+                this.sequence = result.sequence;
+              }
               this.lastReceiveTime = Date.now();
               this.lastServerTime = result.timestamp;
+
               switch (result.handlerId) {
-                case 0:
+                case handlerIds['common.initial']:
                   this.userId = result.data.userId;
                   break;
               }
-              console.log(`서버로부터 데이터 도착 :\n`, result);
+              console.log(
+                `서버로부터 데이터 도착 :`,
+                getProtoTypeNameByHandlerId(result.handlerId),
+                '\n',
+                result,
+              );
             } catch (error) {
               console.error(error);
             }

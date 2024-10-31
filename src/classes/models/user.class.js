@@ -29,7 +29,7 @@ class User {
     const now = Date.now();
 
     // console.log(`${this.id}: ping`);
-    this.socket.write(createPingPacket(now));
+    this.socket.write(createPingPacket(now, this.id));
   }
 
   handlePong(timestamp) {
