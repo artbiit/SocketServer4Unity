@@ -1,5 +1,5 @@
-import { addUser, getUserByDeviceId, getUserById } from '../../session/user.session.js';
-import { handlerIds, RESPONSE_SUCCESS_CODE } from '../index.js';
+import { addUser, getUserByDeviceId } from '../../session/user.session.js';
+import { RESPONSE_SUCCESS_CODE } from '../index.js';
 import { upsertUser } from '../../db/user/user.db.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Result from '../result.js';

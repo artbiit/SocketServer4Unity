@@ -27,9 +27,10 @@ export const loadHandlers = async () => {
       return a.namespace.localeCompare(b.namespace);
     });
 
-  let handlerId = 0;
+  let handlerId = -1;
   for (const { namespace, typeName, fullName } of sortedPacketEntries) {
     try {
+      handlerId++;
       if (handlerId < 0 || handlerId > 255) {
         throw new Error(`핸들러 아이디가 허용범위를 벗어났습니다. : ${handlerId}`);
       }
@@ -40,7 +41,7 @@ export const loadHandlers = async () => {
       handlerIds[fullName] = handlerId;
       handlers[handlerId].handler = handler.default || handler;
       handlers[handlerId].namespace = namespace;
-      handlers[handlerId++].typeName = typeName;
+      handlers[handlerId].typeName = typeName;
 
       logger.info(`Loaded Handler: ${handlerPath}`);
     } catch (error) {
