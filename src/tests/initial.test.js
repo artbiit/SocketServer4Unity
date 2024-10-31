@@ -12,7 +12,7 @@ await client.connect();
 
 const initialPayload = {
   deviceId: 'xxxxx',
-  clientVersion: '1.0.2',
+  clientVersion: '1.0.1',
 };
 
 client.sendMessage(initialPayload, 'initial.InitialPacket');
