@@ -7,6 +7,7 @@ import configs from '../../configs/configs.js';
 import { v4 as uuidv4 } from 'uuid';
 import CustomError from '../../utils/error/customError.js';
 import { findUserCoordinates } from '../../db/user/user.coord.db.js';
+import game from '../../classes/models/game.class.js';
 
 const { CLIENT_VERSIONS } = configs;
 
@@ -24,14 +25,19 @@ const initialHandler = async ({ socket, payload }) => {
     if (CLIENT_VERSIONS.includes(clientVersion)) {
       const userId = uuidv4();
       const user = await upsertUser(userId, deviceId);
-      addUser(socket, userId, playerId);
       const lastCoord = await findUserCoordinates(user.seqNo);
-      let lastLocation = { x: 0.0, y: 0.0 };
+
+      let x = 0.0;
+      let y = 0.0;
+
       if (lastCoord) {
-        (lastLocation.x = lastCoord.x_coord), (lastLocation.y = lastCoord.y_coord);
+        x = lastCoord.xCoord;
+        y = lastCoord.yCoord;
       }
 
-      result.payload = { userId, lastLocation };
+      addUser(socket, userId, playerId, deviceId, x, y, user.seqNo);
+      result.payload = { userId, x, y, allLocation: game.getAllLocation() };
+      console.log(result.payload);
     } else {
       throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH);
     }

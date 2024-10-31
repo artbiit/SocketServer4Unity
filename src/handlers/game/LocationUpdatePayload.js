@@ -5,7 +5,7 @@ import game from '../../classes/models/game.class.js';
 import { getUserBySocket } from '../../session/user.session.js';
 
 const updateLocationHandler = ({ socket, payload }) => {
-  const result = new Result(handlerIds.game.UpdateLocationPayLoad, RESPONSE_SUCCESS_CODE, {});
+  const result = new Result(RESPONSE_SUCCESS_CODE, {});
 
   const { x, y } = payload;
 

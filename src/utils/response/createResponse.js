@@ -1,10 +1,9 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { getNextSequence } from '../../session/user.session.js';
 import configs from '../../configs/configs.js';
 
 const { PACKET_HEADER_LENGTH } = configs;
 
-export const createResponse = (handlerId, responseCode, data = null, userId) => {
+export const createResponse = (handlerId, responseCode, data = null) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages.response.Response;
   const responsePayload = {
@@ -12,7 +11,6 @@ export const createResponse = (handlerId, responseCode, data = null, userId) => 
     responseCode: responseCode,
     timestamp: Date.now(),
     data: data ? Buffer.from(JSON.stringify(data)) : null,
-    sequence: userId ? getNextSequence(userId) : 0,
   };
 
   const buffer = Response.encode(responsePayload).finish();

@@ -8,7 +8,10 @@ export const findUserCoordinates = async (userSeqNo) => {
 };
 
 export const upsertUserCoordinates = async (userSeqNo, xCoord, yCoord) => {
-  await mysql.query(COORD_QUERIES.UPSERT_USER_COORDINATES, [userSeqNo, xCoord, yCoord]);
+  // console.log(userSeqNo);
+  // console.log(xCoord);
+  // console.log(yCoord);
+  await mysql.execute(COORD_QUERIES.UPSERT_USER_COORDINATES, [userSeqNo, xCoord, yCoord]);
   return { userSeqNo, xCoord, yCoord };
 };
 

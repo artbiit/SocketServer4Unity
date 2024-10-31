@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { mysql } from '../mysql.js';
 import { SQL_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../utils.js';
